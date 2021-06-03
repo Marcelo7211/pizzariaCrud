@@ -15,39 +15,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.generation.pizzaria.model.Cardapio;
-import com.generation.pizzaria.repository.CardapioRepository;
+import com.generation.pizzaria.model.Cliente;
+import com.generation.pizzaria.repository.ClienteRepository;
 
 @RestController
-@RequestMapping("/cardapio")
+@RequestMapping("/cliente")
 //TODO Implementar CrosOringin
-public class CardapioController {
+public class ClienteController {
 	
 	@Autowired
-	private CardapioRepository repository;
+	private ClienteRepository repository;
 	
 	@GetMapping
-	public ResponseEntity<List<Cardapio>> getAll() {
+	public ResponseEntity<List<Cliente>> getAll() {
 		return ResponseEntity.ok(repository.findAll());
 	}
-		
+	
+	@GetMapping("/por-nome/{nome}")
+	public ResponseEntity<List<Cliente>> getAllByNome(@PathVariable String nome) {
+		return ResponseEntity.ok(repository.findAllByNomeContainingIgnoreCase(nome));
+	}
+	
+	@GetMapping("/por-idade/{idade}")
+	public ResponseEntity<List<Cliente>> getAllByIdade(@PathVariable int idade) {
+		return ResponseEntity.ok(repository.pegarPorIdadeMaiorQue(idade));
+	}
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<Cardapio> getById(@PathVariable long id){		
-		return repository.findById(id).map(cardapio -> ResponseEntity.ok(cardapio))
+	public ResponseEntity<Cliente> getById(@PathVariable long id){		
+		return repository.findById(id).map(cliente -> ResponseEntity.ok(cliente))
 				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());		
 	}
 	
 	@PostMapping
-	public ResponseEntity<Cardapio> post(@RequestBody Cardapio cardapio){
+	public ResponseEntity<Cliente> post(@RequestBody Cliente cliente){
 		//TODO Criar service para não permitir duplicidade
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(repository.save(cardapio));
+				.body(repository.save(cliente));
 	}
 	
 	@PutMapping
-	public ResponseEntity<Cardapio> put(@RequestBody Cardapio cardapio){		
+	public ResponseEntity<Cliente> put(@RequestBody Cliente cliente){		
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(repository.save(cardapio));
+				.body(repository.save(cliente));
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -55,6 +65,4 @@ public class CardapioController {
 	public void delete(@PathVariable long id) {
 		repository.deleteById(id);
 	}
-	
-
 }

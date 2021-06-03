@@ -15,39 +15,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.generation.pizzaria.model.Cardapio;
-import com.generation.pizzaria.repository.CardapioRepository;
+import com.generation.pizzaria.model.Pedido;
+import com.generation.pizzaria.repository.PedidoRepository;
 
 @RestController
-@RequestMapping("/cardapio")
+@RequestMapping("/pedido")
 //TODO Implementar CrosOringin
-public class CardapioController {
+public class PedidoController {
 	
 	@Autowired
-	private CardapioRepository repository;
+	private PedidoRepository repository;
 	
 	@GetMapping
-	public ResponseEntity<List<Cardapio>> getAll() {
+	public ResponseEntity<List<Pedido>> getAll() {
 		return ResponseEntity.ok(repository.findAll());
 	}
-		
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<Cardapio> getById(@PathVariable long id){		
-		return repository.findById(id).map(cardapio -> ResponseEntity.ok(cardapio))
+	public ResponseEntity<Pedido> getById(@PathVariable long id){		
+		return repository.findById(id).map(pedido -> ResponseEntity.ok(pedido))
 				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());		
 	}
 	
 	@PostMapping
-	public ResponseEntity<Cardapio> post(@RequestBody Cardapio cardapio){
+	public ResponseEntity<Pedido> post(@RequestBody Pedido pedido){	
 		//TODO Criar service para não permitir duplicidade
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(repository.save(cardapio));
+				.body(repository.save(pedido));
 	}
 	
 	@PutMapping
-	public ResponseEntity<Cardapio> put(@RequestBody Cardapio cardapio){		
+	public ResponseEntity<Pedido> put(@RequestBody Pedido pedido){		
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(repository.save(cardapio));
+				.body(repository.save(pedido));
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -55,6 +55,4 @@ public class CardapioController {
 	public void delete(@PathVariable long id) {
 		repository.deleteById(id);
 	}
-	
-
 }

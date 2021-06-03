@@ -4,10 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_cardapio")
@@ -27,6 +30,10 @@ public class Cardapio {
 	@NotBlank(message = "Nao pode ser nulo ou vazio")
 	@Size(min = 1, max = 1, message = "Tamanho incorreto, minimo e maximo 1")
 	private String tamanho;
+	
+	@ManyToOne
+	@JsonIgnoreProperties("cardapios")
+	private Pedido pedido; 
 
 	private boolean bordaRecheada;
 
@@ -60,6 +67,14 @@ public class Cardapio {
 
 	public void setTamanho(String tamanho) {
 		this.tamanho = tamanho;
+	}
+	
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
 	}
 
 	public boolean isBordaRecheada() {
